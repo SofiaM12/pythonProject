@@ -170,4 +170,5 @@ titanic_full_df.sort_values(by="Fare", ascending=False)
 
 
 
+
 ###Работа с пропущенными значениями
