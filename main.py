@@ -54,7 +54,8 @@ titanic_full_df = pd.read_csv("https://nagornyy.me/datasets/titanic.csv", sep=",
 print(titanic_full_df)
 #quick view on data:
 titanic_full_df.shape #(891, 12)
-titanic_full_df.info()
+titanic_full_df.info() #инфа про каждый столбец
+titanic_full_df.dtypes # тип данных в каждом из столбцов
 
 titanic_full_df.describe() # describe statistics on columns
 titanic_full_df.columns # Index (['PassengerId', 'Survived', 'Pclass' ... 'Embarked'], dtype='object')
@@ -73,7 +74,10 @@ titanic_full_df.isnull().sum() #Отсутствующие данные поме
 
 titanic_full_df.sample(5) #5 рандомных образцов
 
-#Индексация и выделение:
+
+
+
+###Индексация и выделение:
 titanic_full_df["Age"].head()
 '''
 0 22.0
@@ -97,4 +101,73 @@ titanic_full_df.index.tolist()[:10] # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 titanic_full_df.loc[442 : 450 : 2, ["Age", "Sex"]] # выбираем ряды по индексу
 titanic_full_df.set_index(["Embarked"]).loc["S"].head() #вместо столбца с индексами (первого) - столбец embarked (порт) со значением только S
 titanic_full_df.iloc[0] # для чтения и записи значения в датафрейм  /df.iloc[1, 1] = '21' задать значение в первой строке, первом столбце, нумерация строк и столбцов с нуля/
-titanic_full_df.iloc[[564, 442]]# покажет 564ую и 442ую строчку
+titanic_full_df.iloc[[564, 442]]# покажет 564ую и 442ую строчку со всеми колонками
+titanic_full_df.loc[[564, 442], ["Name", "Sex"]]  # покажет 564ую и 442ую строчку, колонки ["Name", "Sex"]
+titanic_full_df == 1 # выдаст таблицу из false и true (там где значение ==1)
+titanic_full_df[titanic_full_df["Survived"] == 0].head() #Пассажиры, кто не выжил
+titanic_full_df[titanic_full_df["Survived"] == 1]["Sex"].value_counts() #посчитать число значений
+'''
+female 233
+male 109
+Name: Sex, dtype: int64'''
+
+'''nunique:
+Syntax: Series.nunique(dropna=True)
+Parameters:
+dropna: Exclude NULL value if True
+Return Type: Integer – Number of unique values in a column.'''
+
+titanic_full_df[(titanic_full_df["Fare"] > 100)
+                | (titanic_full_df["Name"].str.find("Master") != -1)].head()  # таблица где либо fare>100,
+# либо в имени пассажира есть слово Master
+
+
+
+
+
+###Методы:
+titanic_full_df["Embarked"].unique()
+'''array(['S', 'C', 'Q', nan], dtype=object)'''
+titanic_full_df["Embarked"].nunique() #3
+
+
+titanic_full_df["Survived"].value_counts()
+'''
+0 549
+1 342
+Name: Survived, dtype: int64'''
+
+
+titanic_full_df["Pclass"].value_counts()
+'''3 491
+1 216
+2 184
+Name: Pclass, dtype: int64'''
+
+titanic_full_df["Pclass"].replace({1: "Элита", 2: "Средний класс", 3: "Работяги"}, inplace=True)
+#inplace, всегда по умолчанию False, что означает, что исходный DataFrame нетронутый,
+# и операция возвращает новый DF. При настройке inplace = True операция может работать на исходном DF
+
+titanic_full_df["Pclass"].value_counts()
+'''Работяги 491
+Элита 216
+Средний класс 184
+Name: Pclass, dtype: int64'''
+
+titanic_full_df["Fare"].apply(lambda x: "Дёшево" if x < 20 else "Дорого")
+'''
+0 Дёшево
+1 Дорого
+2 Дёшево
+3 Дорого
+4 Дёшево
+5 Дёшево
+6 Дорого...
+'''
+titanic_full_df["Fare_Bin"] = titanic_full_df["Fare"].apply(lambda x: "Дёшево" if x < 20 else "Дорого")
+#записать предыдущее в отдельный столбик
+titanic_full_df.sort_values(by="Fare", ascending=False)
+
+
+
+###Работа с пропущенными значениями
