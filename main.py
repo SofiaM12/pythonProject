@@ -170,5 +170,60 @@ titanic_full_df.sort_values(by="Fare", ascending=False)
 
 
 
-
 ###Работа с пропущенными значениями
+titanic_full_df.isnull().any() #
+#Отсутствующие данные помечаются как NaN.
+# isnull() который сохраняет значение True для любого значения NaN
+#Получаем таблицу того же размера, но на месте реальных данных в ней находятся логические переменные,которые
+# принимают значение False, если значение поля у объекта есть,или True - если значение в поле NaN.
+
+''' True - для столбцов где есть пропущенные значения
+...
+Pclass False
+Name False
+Sex False
+Age True
+SibSp False...
+'''
+
+
+titanic_full_df.dropna().head() #dropna - удаление строк с как минимум одним NAN.
+#axis{0 or ‘index’, 1 or ‘columns’}, default 0
+#dropna(axis = 0) - axis = 0 or ‘index’ : Drop rows which contain missing values.
+# axis = 1, or ‘columns’ : Drop columns which contain missing value.
+
+#how{‘any’, ‘all’}, default ‘any’
+# how='all' - удаляет строки/колонки, где все элементы NAN
+# ‘any’ : какой-то из элементов NAN
+#subset - Labels along other axis to consider, e.g. if you are dropping rows these would be a list of columns to include.
+titanic_full_df.dropna(subset=["Age", "Sex"]).head() #удаляем только те строчки, у которых есть NAN в столбцах ["Age", "Sex"]
+titanic_full_df.dropna(thresh=12).head() # не менее 12 заполненных колонок (без NAN)  #Keep only the rows with at least 12 non-NA values/
+titanic_full_df.fillna("ПРОПУСК").head() #Заменить все NAN на слово "ПРОПУСК" #Fill NA/NaN values using the specified method
+titanic_full_df["Age"].mean() #среднее значение по столбцу
+titanic_full_df["Age"].fillna(value=titanic_df["Age"].mean()).head() #заменить в столбце Age все NAN а среднее значение по столбцу Age
+titanic_full_df[["Sex", "Survived"]].pivot_table(index=["Sex"], columns=["Survived"], aggfunc=len)
+#pivot table - сводная таблица,
+'''
+Survived	0	1
+             Sex		
+  female	81	233
+  male	   468	109'''
+
+
+titanic_full_df[["Sex", "Survived", "Age"]].pivot_table(values=["Age"], index=["Sex"],
+                                                        columns=["Survived"], aggfunc="mean")
+
+
+'''	
+Age
+Survived	0	1
+               Sex		
+female	25.046875	28.847716
+male	31.618056	27.276022'''
+
+
+
+#A groupby operation involves some combination of splitting the object, applying a function,
+#and combining the results. This can be used to group large amounts of data and compute operations
+#on these groups.
+
