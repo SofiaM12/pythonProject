@@ -200,7 +200,7 @@ titanic_full_df.dropna(subset=["Age", "Sex"]).head() #удаляем тольк�
 titanic_full_df.dropna(thresh=12).head() # не менее 12 заполненных колонок (без NAN)  #Keep only the rows with at least 12 non-NA values/
 titanic_full_df.fillna("ПРОПУСК").head() #Заменить все NAN на слово "ПРОПУСК" #Fill NA/NaN values using the specified method
 titanic_full_df["Age"].mean() #среднее значение по столбцу
-titanic_full_df["Age"].fillna(value=titanic_df["Age"].mean()).head() #заменить в столбце Age все NAN а среднее значение по столбцу Age
+titanic_full_df["Age"].fillna(value=titanic_full_df["Age"].mean()).head() #заменить в столбце Age все NAN а среднее значение по столбцу Age
 titanic_full_df[["Sex", "Survived"]].pivot_table(index=["Sex"], columns=["Survived"], aggfunc=len)
 #pivot table - сводная таблица,
 '''
@@ -222,8 +222,66 @@ female	25.046875	28.847716
 male	31.618056	27.276022'''
 
 
-
+titanic_full_df.groupby("Pclass")
 #A groupby operation involves some combination of splitting the object, applying a function,
 #and combining the results. This can be used to group large amounts of data and compute operations
 #on these groups.
+
+print(titanic_full_df.groupby("Pclass").mean()["Age"])
+'''
+Pclass
+Работяги 25.140620
+Средний класс 29.877630
+Элита 38.233441
+Name: Age, dtype: float64'''
+
+titanic_full_df[["Pclass", "Age"]].pivot_table(values=["Age"], index=["Pclass"], aggfunc="mean") #тот же рез-ат, что
+#в предыд команде
+'''              Age
+Pclass                  
+Работяги       25.140620
+Средний класс  29.877630
+Элита          38.233441'''
+
+
+titanic_full_df.groupby("Pclass").mean().loc["Работяги"]
+'''PassengerId 439.154786
+Survived 0.242363
+Age 25.140620
+SibSp 0.615071
+Parch 0.393075
+Fare 13.675550
+Relatives 1.008147
+Name: Работяги, dtype: float64'''
+
+###Другие функции: count, min/max, describe(), first, std ...
+
+titanic_full_df.groupby("Pclass").describe()["Age"] #описательная статистика по выбранным колонкам (по которым группируем) и признакам
+'''	
+count	mean	std	min	25%	50%	75%	max
+Pclass								
+Работяги	355.0	25.140620	12.495398	0.42	18.0	24.0	32.0	74.0
+Средний класс	173.0	29.877630	14.001077	0.67	23.0	29.0	36.0	70.0
+Элита	186.0	38.233441	14.802856	0.92	27.0	37.0	49.0	80.0
+'''
+
+titanic_full_df.groupby("Pclass").describe()["Age"].transpose()
+'''
+Pclass	Работяги	Средний класс	Элита
+count	355.000000	173.000000	186.000000
+mean	25.140620	29.877630	38.233441
+std	12.495398	14.001077	14.802856
+min	0.420000	0.670000	0.920000
+25%	18.000000	23.000000	27.000000
+50%	24.000000	29.000000	37.000000
+75%	32.000000	36.000000	49.000000
+max	74.000000	70.000000	80.000000'''
+
+titanic_full_df.groupby("Pclass")["Age"].agg(["min", "max", "std"])
+'''
+               min  	max	   std
+Pclass			
+Работяги	   0.42	   74.0	  12.495398
+Средний класс	0.67	70.0	14.001077
+Элита	        0.92	80.0	14.802856'''
 
