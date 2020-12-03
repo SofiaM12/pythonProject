@@ -244,7 +244,7 @@ Pclass
 Элита          38.233441'''
 
 
-titanic_full_df.groupby("Pclass").mean().loc["Работяги"]
+titanic_full_df.groupby("Pclass").mean().loc["Работяги"] # только по одному конкретномук значению из Pclass
 '''PassengerId 439.154786
 Survived 0.242363
 Age 25.140620
@@ -284,4 +284,25 @@ Pclass
 Работяги	   0.42	   74.0	  12.495398
 Средний класс	0.67	70.0	14.001077
 Элита	        0.92	80.0	14.802856'''
+
+titanic_full_df.groupby("Pclass").agg({"Age": np.mean, "PassengerId": "count"}) #.agg -ггрегирование, np.mean - ункция агрегирования
+#Count non-NA cells for each column or row.
+'''	
+             Age	PassengerId
+Pclass		
+Работяги	   25.140620	491
+Средний класс	29.877630	184
+Элита	        38.233441	216'''
+
+
+
+titanic_full_df.groupby(["Pclass", "Sex"]).mean()["Fare"]
+'''Pclass Sex
+Работяги female 16.118810
+male 12.661633
+Средний класс female 21.970121
+male 19.741782
+Элита female 106.125798
+male 67.226127
+Name: Fare, dtype: float64'''
 
