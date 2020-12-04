@@ -49,6 +49,36 @@ booleans. Pandas Series do not suffer from this limitation.
 As an example, you can pass three of Python’s built-in functions into a pandas 
 Series without getting an error:'''
 pd.Series([sum, print, len])
+
+ser1 = pd.Series([1, 2, 3, 4], index=['USA', 'Germany', 'USSR', 'Japan'])
+print(ser1)
+'''
+USA 1
+Germany 2
+USSR 3
+Japan 4
+dtype: int64'''
+
+ser2 = pd.Series([1, 2, 5, 4], index=['USA', 'Germany', 'Italy', 'Japan'])
+'''
+USA 1
+Germany 2
+Italy 5
+Japan 4
+dtype: int64'''
+print(ser2)
+ser1['USA'] #1
+
+ser1 + ser2
+'''
+Germany 4.0
+Italy NaN
+Japan 8.0
+USA 2.0
+USSR NaN
+dtype: float64'''
+
+
 print("\n"*2)
 titanic_full_df = pd.read_csv("https://nagornyy.me/datasets/titanic.csv", sep=",") #разделить dataframe по запятым
 print(titanic_full_df)
@@ -166,7 +196,7 @@ titanic_full_df["Fare"].apply(lambda x: "Дёшево" if x < 20 else "Доро�
 '''
 titanic_full_df["Fare_Bin"] = titanic_full_df["Fare"].apply(lambda x: "Дёшево" if x < 20 else "Дорого")
 #записать предыдущее в отдельный столбик
-titanic_full_df.sort_values(by="Fare", ascending=False)
+titanic_full_df.sort_values(by="Fare", ascending=False) #сортировка по значению колонки
 
 
 
@@ -285,8 +315,8 @@ Pclass
 Средний класс	0.67	70.0	14.001077
 Элита	        0.92	80.0	14.802856'''
 
-titanic_full_df.groupby("Pclass").agg({"Age": np.mean, "PassengerId": "count"}) #.agg -ггрегирование, np.mean - ункция агрегирования
-#Count non-NA cells for each column or row.
+titanic_full_df.groupby("Pclass").agg({"Age": np.mean, "PassengerId": "count"}) #.agg - агрегирование, np.mean - функция агрегирования
+#"count" - Count non-NA cells for each column or row.
 '''	
              Age	PassengerId
 Pclass		
@@ -306,3 +336,59 @@ male 19.741782
 male 67.226127
 Name: Fare, dtype: float64'''
 
+
+
+
+###Цикл по значениям
+###Если вы исползуете циклы, возможно вы что-то делаете не так. Иногда, однако, это необходимо.
+
+print(ser1)
+'''
+USA 1
+Germany 2
+USSR 3
+Japan 4
+dtype: int64'''
+for (index, value) in ser1.iteritems():
+    print("Страна {}, место {}.".format(index, value))  # iteritems() - Iterate over (column name, Series) pairs.
+'''
+Страна USA, место 1.
+Страна Germany, место 2.
+Страна USSR, место 3.
+Страна Japan, место 4.'''
+
+
+for index, row in titanic_full_df.iterrows():   #iterrows() - Iterate over DataFrame rows as (index, Series) pairs.
+    print(index, row["Name"])
+'''
+0 Braund, Mr. Owen Harris
+1 Cumings, Mrs. John Bradley (Florence Briggs Thayer)
+2 Heikkinen, Miss. Laina
+3 Futrelle, Mrs. Jacques Heath (Lily May Peel)
+4 Allen, Mr. William Henry
+5 Moran, Mr. James
+6 McCarthy, Mr. Timothy J
+7 Palsson, Master. Gosta Leonard
+8 Johnson, Mrs. Oscar W (Elisabeth Vilhelmina Berg)
+9 Nasser, Mrs. Nicholas (Adele Achem)
+10 Sandstrom, Miss. Marguerite Rut
+...'''
+
+
+for group_name, group in titanic_full_df.groupby("Pclass"):
+    print(group_name, group["Age"].mean())
+'''
+Работяги 25.14061971830986
+Средний класс 29.87763005780347
+Элита 38.233440860215055'''
+
+
+for group_name, group in titanic_full_df.groupby("Pclass"):
+    print(group_name, group["Age"].mean())
+'''
+Работяги 25.14061971830986
+Средний класс 29.87763005780347
+Элита 38.233440860215055'''
+
+
+###Слияние и соединение
