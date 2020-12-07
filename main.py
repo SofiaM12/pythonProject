@@ -518,11 +518,15 @@ ser2.plot()
 #plt.show() #покажет график в интерактивном режиме, plt.savefig('foo.png') - сохранит график в той же папке
 titanic_full_df.hist()
 #plt.show() #покажет гистограммы в интерактивном режиме
-titanic_full_df["Age"].plot(kind="kde", xlim=(titanic_full_df["Age"].min(), titanic_full_df["Age"].max()));
+titanic_full_df["Age"].plot(kind="kde", xlim=(titanic_full_df["Age"].min(), titanic_full_df["Age"].max()))
 #In statistics, kernel density estimation (KDE) is a non-parametric way to estimate
 #the probability density function (PDF) of a random variable.
 #This function uses Gaussian kernels and includes automatic bandwidth determination. xlim - min and max of X axis
 plt.show()
 ser2.plot(kind="bar", fontsize=20)
 titanic_full_df["Sex"].value_counts().plot(kind="pie", figsize=(7, 7), fontsize=20)
-titanic_full_df["Pclass"].value_counts().plot(kind="pie", figsize=(7, 7), fontsize=20);
+titanic_full_df["Pclass"].value_counts().plot(kind="pie", figsize=(7, 7), fontsize=20)
+titanic_full_df[["Sex", "Survived"]].pivot_table(index=["Sex"], columns=["Survived"], aggfunc=len).plot(kind="bar")
+plt.savefig('pivot_table_plot.png')
+titanic_full_df[["Age", "Survived"]].pivot_table(index=["Age"], columns=["Survived"], aggfunc=len).plot()
+plt.show()
