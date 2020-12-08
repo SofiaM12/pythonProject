@@ -84,7 +84,7 @@ titanic_full_df = pd.read_csv("https://nagornyy.me/datasets/titanic.csv", sep=",
 print(titanic_full_df)
 #quick view on data:
 titanic_full_df.shape #(891, 12)
-titanic_full_df.info() #инфа про каждый столбец
+titanic_full_df.info() #инфа про каждый столбец (число уникальных значений и тип переменных)
 titanic_full_df.dtypes # тип данных в каждом из столбцов
 
 titanic_full_df.describe() # describe statistics on columns
